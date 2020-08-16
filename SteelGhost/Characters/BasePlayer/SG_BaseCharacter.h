@@ -4,7 +4,8 @@
 
 #include "Core.h"
 #include "GameFramework/Character.h"
-#include "Storage/SG_BaseStorage.h"
+#include "Storage/SG_Storage.h"
+#include "Storage/Storage/BaseStorage/TestActorComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "SG_BaseCharacter.generated.h"
@@ -41,11 +42,17 @@ protected:
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class USphereComponent* CharacterSphereConponent;
 
+	/** Movement component used for movement logic in various movement modes (walking, falling, etc), containing relevant settings and functions to control movement. */
+	//UPROPERTY(Replicated, Category = Storage, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//	UCharacterMovementComponent* CharacterMovement;
 
-	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Category = Storage)
-		class USG_BaseStorage* CharacterStorage;
-	
+
+	UPROPERTY(Replicated, Category = Storage, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class USG_Storage* Storage;
+
+	UPROPERTY(Replicated, Category = Storage, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UTestActorComponent* TestComponent;
+
 	FTimerHandle SpawnTimer;
 
 public:
@@ -191,7 +198,10 @@ public:
 	//FORCEINLINE class USkeletalMeshComponent* Get() const { return MeshBody; }
 
 	/** Returns Mesh1P subobject **/
-	FORCEINLINE class USG_BaseStorage* GetCharacterStorage() const { return CharacterStorage; }
+	FORCEINLINE class USG_Storage* GetStorage() const { return Storage; }
+
+	FORCEINLINE class UTestActorComponent* GetTestComponent() const { return TestComponent; }
+
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 

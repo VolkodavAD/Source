@@ -16,6 +16,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Storage/Interactiv/SG_BasePickup.h"
 
+//#include "Storage/SG_BaseStorage.h"
+//#include "Storage/SG_Storage.h"
+
 // Sets default values
 ASG_BaseCharacter::ASG_BaseCharacter()
 {
@@ -35,9 +38,6 @@ ASG_BaseCharacter::ASG_BaseCharacter()
 	FirstPersonCameraComponent->bUsePawnControlRotation = true; 
 	FirstPersonCameraComponent->SetupAttachment(SpringArmComponent);
 
-	CharacterStorage = CreateDefaultSubobject<USG_BaseStorage>(TEXT("CharacterStorage"));
-	//CharacterStorage->SetupAttachment(GetCapsuleComponent());
-	//CharacterStorage->SetIsReplicated(true);
 
 	// Сфера для проверки пересечения и анализа вокруг игрока
 	CharacterSphereConponent = CreateDefaultSubobject<USphereComponent>(TEXT("CharacterSphere"));
@@ -46,6 +46,13 @@ ASG_BaseCharacter::ASG_BaseCharacter()
 
 	//TestStorage->InitStorage(4, 4);
 
+	TestComponent = this->CreateDefaultSubobject<UTestActorComponent>(TEXT("TestComponent"));
+	//CharacterStorage->SetupAttachment(GetCapsuleComponent());
+	TestComponent->SetIsReplicated(false);
+	
+	Storage = this->CreateDefaultSubobject<USG_Storage>(TEXT("Storage"));
+	//CharacterStorage->SetupAttachment(GetCapsuleComponent());
+	Storage->SetIsReplicated(true);
 
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	MeshBody = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
@@ -79,7 +86,8 @@ void ASG_BaseCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > &
 
 	DOREPLIFETIME(ASG_BaseCharacter, ChatTestRep);
 	DOREPLIFETIME(ASG_BaseCharacter, FirstPersonCameraComponent);
-	DOREPLIFETIME_CONDITION(ASG_BaseCharacter, CharacterStorage, COND_SkipOwner);
+	DOREPLIFETIME_CONDITION(ASG_BaseCharacter, TestComponent, COND_SkipOwner);
+	DOREPLIFETIME_CONDITION(ASG_BaseCharacter, Storage, COND_SkipOwner);
 }
 
 // Called when the game starts or when spawned

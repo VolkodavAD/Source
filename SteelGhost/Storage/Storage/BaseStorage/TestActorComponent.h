@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Net/UnrealNetwork.h"
 #include "Components/ActorComponent.h"
 #include "TestActorComponent.generated.h"
 

@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SG_BaseStorage.h"
-#include "Net/UnrealNetwork.h"
+#include "SG_Storage.h"
 
 // Sets default values for this component's properties
-USG_BaseStorage::USG_BaseStorage()
+USG_Storage::USG_Storage()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -16,28 +15,11 @@ USG_BaseStorage::USG_BaseStorage()
 	SizeY = 4;
 	ItemArray.SetNumZeroed(SizeX*SizeY);
 	// ...
-
 }
 
-void USG_BaseStorage::GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(USG_BaseStorage, TestRep);
-	DOREPLIFETIME(USG_BaseStorage, ItemArray);
-	//DOREPLIFETIME(AReplicatedActor, bFlag);
-	//DOREPLIFETIME(AReplicatedActor, IntegerArray);
-}
-
-void USG_BaseStorage::InitStorage(uint8 NewSizeX, uint8 NewSizeY)
-{
-	SizeX = NewSizeX;
-	SizeY = NewSizeY;
-	ItemArray.SetNumZeroed(SizeX*SizeY);
-}
 
 // Called when the game starts
-void USG_BaseStorage::BeginPlay()
+void USG_Storage::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -47,15 +29,21 @@ void USG_BaseStorage::BeginPlay()
 
 
 // Called every frame
-void USG_BaseStorage::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void USG_Storage::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
 
+void USG_Storage::InitStorage(uint8 NewSizeX, uint8 NewSizeY)
+{
+	SizeX = NewSizeX;
+	SizeY = NewSizeY;
+	ItemArray.SetNumZeroed(SizeX*SizeY);
+}
 
-bool USG_BaseStorage::CheckCellFull(int32 CheckedCell, int32 ItemSizeX, int32 ItemSizeY)
+bool USG_Storage::CheckCellFull(int32 CheckedCell, int32 ItemSizeX, int32 ItemSizeY)
 {
 	int32 ix = CheckedCell % SizeX;
 	int32 iy = CheckedCell / SizeX;
@@ -80,7 +68,7 @@ bool USG_BaseStorage::CheckCellFull(int32 CheckedCell, int32 ItemSizeX, int32 It
 	return Local_FreeArea;
 }
 
-int32 USG_BaseStorage::GetFreeSlot(int32 ItemSizeX, int32 ItemSizeY)
+int32 USG_Storage::GetFreeSlot(int32 ItemSizeX, int32 ItemSizeY)
 {
 	// первичный цикл проверки €чеек
 	for (uint8 iy = 0; iy < (SizeY - ItemSizeY + 1); ++iy)
@@ -96,7 +84,7 @@ int32 USG_BaseStorage::GetFreeSlot(int32 ItemSizeX, int32 ItemSizeY)
 	return -1;
 }
 
-bool USG_BaseStorage::AddItemInSlot(USG_BaseItem* AddedItem)
+bool USG_Storage::AddItemInSlot(USG_BaseItem* AddedItem)
 {
 	if (AddedItem != nullptr)
 	{
@@ -112,7 +100,7 @@ bool USG_BaseStorage::AddItemInSlot(USG_BaseItem* AddedItem)
 				{
 					int32 LocalActivIndex = IndexFreeSlot + ix + (iy * SizeX);
 
-					FStorageSlot ActivSlot;
+					FSlot ActivSlot;
 
 					ActivSlot.IndexInStorage = ItemArray[LocalActivIndex].IndexInStorage;
 					ActivSlot.SlotType = ItemArray[LocalActivIndex].SlotType;
@@ -147,7 +135,7 @@ bool USG_BaseStorage::AddItemInSlot(USG_BaseItem* AddedItem)
 	else return false;
 }
 
-bool USG_BaseStorage::DeleteItemFromSlot(USG_BaseItem* AddedItem)
+bool USG_Storage::DeleteItemFromSlot(USG_BaseItem* AddedItem)
 {
 	return false;
 }
